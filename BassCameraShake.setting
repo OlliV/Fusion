@@ -1,0 +1,255 @@
+{
+	Tools = ordered() {
+		BassCameraShake = GroupOperator {
+			CtrlWZoom = false,
+			NameSet = true,
+			Inputs = ordered() {
+				Input9 = InstanceInput {
+					SourceOp = "CameraShake1_1",
+					Source = "Speed",
+					Name = "Shake Speed",
+					Default = 0.874,
+				},
+				Input1 = InstanceInput {
+					SourceOp = "CameraShake1_1",
+					Source = "MotionBlur",
+					Default = 0,
+				},
+				Input2 = InstanceInput {
+					SourceOp = "CameraShake1_1",
+					Source = "Quality",
+					Default = 2,
+				},
+				Input3 = InstanceInput {
+					SourceOp = "CameraShake1_1",
+					Source = "ShutterAngle",
+					Default = 180,
+				},
+				Input4 = InstanceInput {
+					SourceOp = "CameraShake1_1",
+					Source = "CenterBias",
+					Default = 0,
+				},
+				Input5 = InstanceInput {
+					SourceOp = "CameraShake1_1",
+					Source = "SampleSpread",
+					Default = 1,
+				},
+				Input6 = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Contrast",
+					Default = 0.21,
+				},
+				Input7 = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Brightness",
+					Default = 0.06,
+				},
+				Input8 = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Saturation",
+					Default = 1,
+				},
+				MainInput1 = InstanceInput {
+					SourceOp = "BrightnessContrast",
+					Source = "Input",
+					Name = "Background",
+				}
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "Merge1",
+					Source = "Output",
+				},
+				Output2 = InstanceOutput {
+					SourceOp = "Shake1_1",
+					Source = "Y",
+				},
+				Output1 = InstanceOutput {
+					SourceOp = "Shake1_1",
+					Source = "Position",
+				}
+			},
+			ViewInfo = GroupInfo {
+				Pos = { 325.334, 49.1818 },
+				Flags = {
+					Expanded = true,
+					AllowPan = false,
+					ConnectedSnap = true,
+					AutoSnap = true,
+					RemoveRouters = true
+				},
+				Size = { 576.874, 169.448, 288.437, 73.3333 },
+				Direction = "Horizontal",
+				PipeStyle = "Direct",
+				Scale = 1,
+				Offset = { -7.18524, -0.816505 }
+			},
+			Tools = ordered() {
+				MosaicBlur = ofx.com.blackmagicdesign.resolvefx.MosaicBlur {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Source = Input {
+							SourceOp = "FastNoise",
+							Source = "Output",
+						},
+						PixelFrequency = Input { Value = 20, },
+						SmoothStrength = Input { Value = 0, },
+						advancedControlsGroup = Input { Value = 1, },
+						BorderType = Input { Value = FuID { "BORDER_TYPE_CONSTANT" }, },
+						BlendAmount = Input { Value = 0, },
+						blendGroup = Input { Value = 0, },
+						blendIn = Input { Value = 1, },
+						blend = Input { Value = 0, },
+						ignoreContentShape = Input { Value = 0, },
+						legacyIsProcessRGBOnly = Input { Value = 0, },
+						refreshTrigger = Input { Value = 1, },
+						resolvefxVersion = Input { Value = "2.2", },
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, 49.5 } },
+				},
+				CameraShake1_1 = CameraShake {
+					Inputs = {
+						MotionBlur = Input { Value = 1, },
+						RotationDeviation = Input { Value = 0.063, },
+						Randomness = Input { Value = 0.953, },
+						OverallStrength = Input {
+							SourceOp = "AudioWAV1",
+							Source = "Output",
+						},
+						Speed = Input { Value = 0.874, },
+						Edges = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "BrightnessContrast",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 55, -16.5 } },
+				},
+				Displace = Displace {
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							SourceOp = "AudioWAV1",
+							Source = "Output",
+						},
+						ProcessGreen = Input { Value = 0, },
+						ProcessBlue = Input { Value = 0, },
+						Type = Input { Value = 1, },
+						XRefraction = Input {
+							SourceOp = "Shake1_1",
+							Source = "X",
+						},
+						YRefraction = Input {
+							SourceOp = "Shake3",
+							Source = "X",
+						},
+						Input = Input {
+							SourceOp = "CameraShake1_1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "MosaicBlur",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 165, 16.5 } },
+				},
+				Shake1_1 = Shake {
+					Inputs = {
+						RandomSeed = Input { Value = 18060, },
+						Smoothness = Input { Value = 2.95, },
+						XMinimum = Input { Value = -0.137, },
+						XMaximum = Input { Value = 0.037, },
+					},
+				},
+				BrightnessContrast = BrightnessContrast {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						Blend = Input {
+							SourceOp = "AnimCurves7",
+							Source = "Value",
+						},
+						Contrast = Input { Value = 0.21, },
+						Brightness = Input { Value = 0.06, },
+						Input = Input {
+							SourceOp = "MediaIn1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { -55, 16.5 } },
+				},
+				FastNoise = FastNoise {
+					CtrlWShown = false,
+					NameSet = true,
+					Inputs = {
+						GlobalOut = Input { Value = 187, },
+						Width = Input { Value = 2048, },
+						Height = Input { Value = 858, },
+						UseFrameFormatSettings = Input { Value = 1, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+						Contrast = Input { Value = 2.27, },
+						SeetheRate = Input { Value = 0.378, },
+						Color1Alpha = Input { Value = 1, },
+					},
+					ViewInfo = OperatorInfo { Pos = { -110, 49.5 } },
+				},
+				Merge1 = Merge {
+					Inputs = {
+						Background = Input {
+							SourceOp = "Displace",
+							Source = "Output",
+						},
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 220, -16.5 } },
+				}
+			},
+		},
+		AudioWAV1 = Fuse.SuckLessAudio {
+			CtrlWZoom = false,
+			Inputs = {
+				WaveFile = Input { Value = "YOUR_AUDIO_FILE_HERE.wav", },
+				FiltersOFF = Input {
+					Value = Text {
+						Value = "Filter"
+					},
+				},
+				Filters = Input { Value = FuID { "BP" }, },
+				AmplitudeOffset = Input { Value = -0.942, },
+			},
+			Version = 271
+		},
+		Shake3 = Shake {
+			Inputs = {
+				Smoothness = Input { Value = 0.79, },
+				XMinimum = Input { Value = -0.006, },
+				XMaximum = Input { Value = 0.038, },
+			},
+		},
+		AnimCurves7 = LUTLookup {
+			CtrlWZoom = false,
+			Inputs = {
+				Curve = Input { Value = FuID { "Easing" }, },
+				EaseIn = Input { Value = FuID { "Quad" }, },
+				EaseOut = Input { Value = FuID { "Quad" }, },
+				Lookup = Input {
+					SourceOp = "AnimCurvesonBrightnessContrastLookup",
+					Source = "Value",
+				},
+				Mirror = Input { Value = 1, },
+			},
+		},
+		AnimCurvesonBrightnessContrastLookup = LUTBezier {
+			KeyColorSplines = {
+				[0] = {
+					[0] = { 0, RH = { 0.333333333333333, 0.333333333333333 }, Flags = { Linear = true } },
+					[1] = { 1, LH = { 0.666666666666667, 0.666666666666667 }, Flags = { Linear = true } }
+				}
+			},
+			SplineColor = { Red = 255, Green = 255, Blue = 255 },
+		}
+	}
+}
